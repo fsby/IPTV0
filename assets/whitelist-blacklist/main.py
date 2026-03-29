@@ -44,7 +44,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(message)s',
     handlers=[
-        logging.FileHandler(FILE_PATHS["log"], mode='a', encoding='utf-8'),
+        logging.FileHandler(FILE_PATHS["log"], mode='w', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
