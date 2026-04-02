@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       URLS: |
-        http://epg.51zmt.top:8000/e1.xml
+        http://epg.51zmt.top:8000/e1.xml.gz
+        http://epg.51zmt.top:8000/e2.xml.gz
         https://epg.zsdc.eu.org/t.xml
         https://raw.githubusercontent.com/kuke31/xmlgz/main/e.xml.gz
         https://epg.pw/xmltv/epg_CN.xml
