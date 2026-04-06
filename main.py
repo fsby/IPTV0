@@ -20,8 +20,8 @@ URL_FETCH_TIMEOUT = 10
 # 白名单测速阈值(ms)
 RESPONSE_TIME_THRESHOLD = 2000
 # M3U相关配置
-TVG_URL = "https://github.com/CCSH/IPTV/raw/refs/heads/main/e.xml.gz"
-LOGO_URL_TPL = "https://raw.githubusercontent.com/CCSH/IPTV/refs/heads/main/logo/{}.png"
+TVG_URL = "https://ghfast.top/https://github.com/CCSH/IPTV/raw/refs/heads/main/e.xml.gz"
+LOGO_URL_TPL = "https://ghfast.top/https://raw.githubusercontent.com/CCSH/IPTV/refs/heads/main/logo/{}.png"
 # 所有单个频道最多保留的有效源数量，可直接修改数字（-1=无限制）
 SINGLE_CHANNEL_MAX_COUNT = 20  
 
