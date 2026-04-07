@@ -36,6 +36,9 @@ jobs:
             "https://github.com/drangjchen/IPTV.git|Logo"
           )
           
+          # 记录根目录，彻底避免 cd 跳转失败
+          ROOT_DIR=$(pwd)
+          
           for REPO in "${REPOS[@]}"; do
             IFS='|' read -r URL SRC_DIRS <<< "$REPO"
             TEMP_DIR="temp_repo"
@@ -43,29 +46,35 @@ jobs:
             echo "处理仓库：$URL"
             rm -rf "$TEMP_DIR"
             
+            # 克隆仓库
             git clone --depth 1 --sparse --filter=blob:none "$URL" "$TEMP_DIR" 2>/dev/null || { 
               echo "克隆失败，跳过"; 
               rm -rf "$TEMP_DIR"
               continue; 
             }
+            [ ! -d "$TEMP_DIR" ] && continue
             
             # 拆分目录并循环处理
             IFS=',' read -ra DIR_LIST <<< "$SRC_DIRS"
             for DIR in "${DIR_LIST[@]}"; do
               echo "  处理目录：$DIR"
               
-              cd "$TEMP_DIR" || continue
-              git sparse-checkout set "$DIR" 2>/dev/null || {
-                cd ..
-                echo "    目录 $DIR 不存在，跳过"
-                continue
+              # 用 git -C 替代 cd，彻底杜绝目录跳转失败
+              git -C "$TEMP_DIR" sparse-checkout set "$DIR" 2>/dev/null || {
+                echo "    目录 $DIR 不存在，跳过";
+                continue;
               }
-              cd ..
               
               # 复制文件（已存在不覆盖）
-              find "$TEMP_DIR/$DIR" -name "*.$FILE_EXT" -type f -size +"$MIN_FILE_SIZE" | while read -r file; do
+              SOURCE_PATH="$ROOT_DIR/$TEMP_DIR/$DIR"
+              [ ! -d "$SOURCE_PATH" ] && {
+                echo "    目录 $SOURCE_PATH 不存在，跳过";
+                continue;
+              }
+              
+              find "$SOURCE_PATH" -name "*.$FILE_EXT" -type f -size +"$MIN_FILE_SIZE" | while read -r file; do
                 filename=$(basename "$file")
-                target="$LOGO_DIR/$filename"
+                target="$ROOT_DIR/$LOGO_DIR/$filename"
                 [ ! -f "$target" ] && cp -f "$file" "$target"
               done
             done
